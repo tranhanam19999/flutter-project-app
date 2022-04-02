@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/screen/couple-memory.dart';
@@ -38,44 +40,60 @@ class _MyHomePageState extends State<MyHomePage> {
   void _handleLogin(context) async {
     var client = new http.Client();
 
-    var getHomeResp = await client.get("http://localhost:5000");
+    try {
+      String url = 'http://localhost:5000/auth/sign-in';
+      Map<String, String> headers = {"Content-type": "application/json"};
+      var obj = {'username': _username, 'password': _password};
 
-    print(getHomeResp.body);
+    print(jsonEncode(obj));
+      // tạo POST request
+      var loginResp = await client.post(url,
+          headers: headers, body: jsonEncode(obj));
+      int statusCode = loginResp.statusCode;
+      String body = loginResp.body;
 
-    final scaffold = ScaffoldMessenger.of(context);
-
-    if (_password.length < 5) {
-      scaffold.showSnackBar(
-        SnackBar(
-          content:
-              Text("Độ dài của mật khẩu phải lớn hơn 6" + _username.toString()),
-          action: SnackBarAction(
-              label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
-        ),
-      );
-    } else if (_username.length < 5) {
-      scaffold.showSnackBar(
-        SnackBar(
-          content: Text(
-              "Độ dài của tên đăng nhập phải lớn hơn 6" + _username.toString()),
-          action: SnackBarAction(
-              label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
-        ),
-      );
-    } else {
-      scaffold.showSnackBar(
-        SnackBar(
-          content:
-              Text("Đăng nhập thành công. Chào mừng: " + _username.toString()),
-          action: SnackBarAction(
-              label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
-        ),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Layout()),
-      );
+      print("s " + body);
+      // var getHomeResp = await client.post("http://localhost:5000", "",
+      // <String>);
+      // print(getHomeResp.body);
+    } catch (e) {
+      print("error " + e.toString());
     }
+
+    // final scaffold = ScaffoldMessenger.of(context);
+
+    // if (_password.length < 5) {
+    //   scaffold.showSnackBar(
+    //     SnackBar(
+    //       content:
+    //           Text("Độ dài của mật khẩu phải lớn hơn 6" + _username.toString()),
+    //       action: SnackBarAction(
+    //           label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
+    //     ),
+    //   );
+    // } else if (_username.length < 5) {
+    //   scaffold.showSnackBar(
+    //     SnackBar(
+    //       content: Text(
+    //           "Độ dài của tên đăng nhập phải lớn hơn 6" + _username.toString()),
+    //       action: SnackBarAction(
+    //           label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
+    //     ),
+    //   );
+    // } else {
+    //   scaffold.showSnackBar(
+    //     SnackBar(
+    //       content:
+    //           Text("Đăng nhập thành công. Chào mừng: " + _username.toString()),
+    //       action: SnackBarAction(
+    //           label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
+    //     ),
+    //   );
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const Layout()),
+    //   );
+    // }
   }
 
   void _handleOnChangeUsername(text) {
