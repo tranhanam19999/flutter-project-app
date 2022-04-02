@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/screen/couple-memory.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String _username = "";
   String _password = "";
 
-  void _handleLogin(context) {
+  void _handleLogin(context) async {
+    var client = new http.Client();
+
+    var getHomeResp = await client.get("http://localhost:5000");
+
+    print(getHomeResp.body);
+
     final scaffold = ScaffoldMessenger.of(context);
 
     if (_password.length < 5) {
