@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screen/model/chat-conversation.dart';
 
-Widget ListViewChat(BuildContext context) {
+Widget ListViewChat(BuildContext context, ChatConversation? chatConversation) {
   Widget sender = Container(
     child: Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
