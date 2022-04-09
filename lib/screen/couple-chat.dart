@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/chat/list-view-chat.dart';
 import 'package:flutter_application_1/screen/model/chat-conversation.dart';
+import 'package:flutter_application_1/screen/model/conversation.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +17,7 @@ class CoupleChat extends StatefulWidget {
 }
 
 class _MyCoupleChatScreenState extends State<CoupleChat> {
-  late Future<ChatConversation> futureChatConversation;
+  late Future<List<ChatConversation>> futureChatConversation;
 
   String _textContent = "";
   var client = new http.Client();
@@ -24,28 +26,30 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
   void initState() {
     super.initState();
     findPartner();
+
     futureChatConversation = fetchChatConversation();
+    const fiveSec = const Duration(seconds: 2);
+    Timer.periodic(fiveSec, (Timer t) {
+      futureChatConversation = fetchChatConversation();
+    });
   }
 
-  Future<ChatConversation> fetchChatConversation() async {
+  Future<List<ChatConversation>> fetchChatConversation() async {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
 
     final url = Uri.parse("http://localhost:5000/chat" + "?senderId=$userId");
-
-    Map<String, String> headers = {"Content-type": "application/json"};
-
-    var getChatConversationResp = await client.get(url, headers: headers);
-    ;
+    var getChatConversationResp = await client.get(url);
 
     if (getChatConversationResp.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return ChatConversation.fromJson(
-          jsonDecode(getChatConversationResp.body));
+      var decodedBody = jsonDecode(getChatConversationResp.body);
+      List<dynamic> list = decodedBody['data'];
+
+      List<ChatConversation> chats = List<ChatConversation>.from(
+          list.map((model) => ChatConversation.fromJson(model)).toList());
+
+      return chats;
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
       throw Exception('Failed to load album');
     }
   }
@@ -75,23 +79,23 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
         fullname: partnerFullname);
   }
 
-  void _handleOnCHangeTextContent(text) {
+  void _handleOnChangeTextContent(text) {
     _textContent = text.toString();
   }
 
-  void _sendMessage() async {
+  void _sendMessage(BuildContext context) async {
     String url = 'http://localhost:5000/chat';
     Map<String, String> headers = {"Content-type": "application/json"};
     var obj = {
-      'sender': UserInfo.getInstance()?.userId,
-      'receiver': PartnerInfo.getInstance()?.userId,
+      'senderId': UserInfo.getInstance()?.userId,
+      'receiverId': PartnerInfo.getInstance()?.userId,
       'content': _textContent
     };
 
-    var sendMessageResp =
-        await client.post(url, headers: headers, body: jsonEncode(obj));
+    await client.post(url, headers: headers, body: jsonEncode(obj));
 
-    String body = sendMessageResp.body;
+    _textContent = "";
+    futureChatConversation = fetchChatConversation();
   }
 
   @override
@@ -102,13 +106,16 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: FutureBuilder<ChatConversation>(
+                child: FutureBuilder<List<ChatConversation>>(
                   future: futureChatConversation,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      var user = UserInfo.getInstance();
+                      var userId = user?.userId;
+
                       return SizedBox(
                           height: 200.0,
-                          child: ListViewChat(context, snapshot.data));
+                          child: ListViewChat(context, snapshot.data, userId));
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     }
@@ -126,10 +133,10 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
                     border: const OutlineInputBorder(),
                     hintText: 'Nhập nội dung',
                     suffixIcon: IconButton(
-                        onPressed: () => _sendMessage(),
+                        onPressed: () => _sendMessage(context),
                         icon: const Icon(Icons.message)),
                   ),
-                  onChanged: (text) => _handleOnCHangeTextContent(text),
+                  onChanged: (text) => _handleOnChangeTextContent(text),
                 ),
               ),
             ]),

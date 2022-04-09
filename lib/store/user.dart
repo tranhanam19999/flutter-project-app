@@ -17,4 +17,11 @@ class UserInfo {
     }
     return _instance;
   }
+
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    return UserInfo(
+      username: json['username'],
+      userId: json['userId'],
+    );
+  }
 }

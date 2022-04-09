@@ -1,7 +1,49 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class CoupleMemory extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/store/partner.dart';
+import 'package:flutter_application_1/store/user.dart';
+import 'package:http/http.dart' as http;
+
+class CoupleMemory extends StatefulWidget {
   const CoupleMemory({Key? key}) : super(key: key);
+
+  @override
+  _MyCoupleMemoryScreenState createState() => _MyCoupleMemoryScreenState();
+}
+
+class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
+  var client = new http.Client();
+
+  @override
+  void initState() {
+    super.initState();
+    findPartner();
+  }
+
+  void findPartner() async {
+    var user = UserInfo.getInstance();
+    var userId = user?.userId;
+    final url =
+        Uri.parse("http://localhost:5000/user/partner" + "?userId=$userId");
+
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    var getPartnerResp = await client.get(url, headers: headers);
+    var loggedUser = jsonDecode(getPartnerResp.body);
+
+    var data = loggedUser['data'];
+
+    var partnerUserId = data['userId'];
+    var partnerUsername = data['username'];
+    var partnerFullname = data['fullname'];
+
+    PartnerInfo.getInstance(
+        username: partnerUsername,
+        password: "",
+        userId: partnerUserId,
+        token: "");
+  }
 
   @override
   Widget build(BuildContext context) {

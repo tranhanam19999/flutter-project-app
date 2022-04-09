@@ -24,4 +24,12 @@ class PartnerInfo {
     }
     return _instance;
   }
+
+  factory PartnerInfo.fromJson(Map<String, dynamic> json) {
+    return PartnerInfo(
+        username: json['username'],
+        userId: json['userId'],
+        token: json['token'],
+        fullname: json['fullname']);
+  }
 }

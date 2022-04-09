@@ -85,6 +85,7 @@ class _MyRegisterPageState extends State<RegisterPage> {
         } else {
           var loggedUser = jsonDecode(body);
 
+          print("ssss "+ loggedUser.toString());
           var loggedUserId = loggedUser['data']['userId'];
           var loggedUserToken = loggedUser['data']['token'];
           UserInfo.getInstance(username: _username, password: _password, userId: loggedUserId, token: loggedUserToken);
