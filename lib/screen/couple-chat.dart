@@ -18,6 +18,7 @@ class CoupleChat extends StatefulWidget {
 
 class _MyCoupleChatScreenState extends State<CoupleChat> {
   late Future<List<ChatConversation>> futureChatConversation;
+  TextEditingController _controller = new TextEditingController(text: "");
 
   String _textContent = "";
   var client = new http.Client();
@@ -28,9 +29,17 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     findPartner();
 
     futureChatConversation = fetchChatConversation();
+    updateChatConversation();
+  }
+
+  void updateChatConversation() {
     const fiveSec = const Duration(seconds: 2);
-    Timer.periodic(fiveSec, (Timer t) {
-      futureChatConversation = fetchChatConversation();
+    Timer.periodic(fiveSec, (Timer t) async {
+      var fetchResult = fetchChatConversation();
+
+      setState(() {
+        futureChatConversation = fetchResult;
+      });
     });
   }
 
@@ -38,7 +47,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
 
-    final url = Uri.parse("http://localhost:5000/chat" + "?senderId=$userId");
+    final url = Uri.parse("http://localhost:5000/chat" + "?userId=$userId");
     var getChatConversationResp = await client.get(url);
 
     if (getChatConversationResp.statusCode == 200) {
@@ -94,8 +103,12 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
 
     await client.post(url, headers: headers, body: jsonEncode(obj));
 
-    _textContent = "";
-    futureChatConversation = fetchChatConversation();
+    var fetchResult = fetchChatConversation();
+    setState(() {
+      _textContent = "";
+      futureChatConversation = fetchResult;
+    });
+    _controller.clear();
   }
 
   @override
@@ -124,11 +137,11 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
                     return const CircularProgressIndicator();
                   },
                 ),
-                // child: SizedBox(height: 200.0, child: ListViewChat(context)),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
+                  controller: _controller,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     hintText: 'Nhập nội dung',

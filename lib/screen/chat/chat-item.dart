@@ -33,7 +33,7 @@ Widget ChatItem(BuildContext context, bool isCurrentUser, String content) {
                     ),
                   ),
                   width: 80,
-                  color: Colors.red,
+                  color: isCurrentUser ? Colors.red : Colors.blue,
                 )
               ],
             ),
