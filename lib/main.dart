@@ -38,9 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _handleLogin(context) async {
     var client = new http.Client();
 
-    var getHomeResp = await client.get("http://localhost:5000");
+    // var getHomeResp = await client.get("http://localhost:5000");
 
-    print(getHomeResp.body);
+    // print(getHomeResp.body);
 
     final scaffold = ScaffoldMessenger.of(context);
 
