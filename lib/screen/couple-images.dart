@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screen/images/list-view-images.dart';
+import 'package:provider/provider.dart';
+
+import '../uploadImage/cloudinary.dart';
+import '../uploadImage/images_picker.dart';
+import '../uploadImage/upload_images.dart';
 
 class CoupleImages extends StatelessWidget {
   const CoupleImages({Key? key}) : super(key: key);
@@ -18,30 +23,23 @@ class CoupleImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextButton(
-                    onPressed: () => _onOpenCamera(context),
-                    child: const Text("Chụp hình"),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.blue),
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.all(16)),
-                    )),
-              ),
-              Expanded(
-                child: SizedBox(height: 200.0, child: ListViewImages(context)),
-              ),
-            ]),
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (_) => CloudImage(),
       ),
-    );
+      ChangeNotifierProvider(
+        create: (_) => FetchImage(),
+      )
+    ], child: MyApp());
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        color: Colors.white,
+        debugShowCheckedModeBanner: false,
+        home: MyHomePage());
   }
 }
