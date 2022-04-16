@@ -4,7 +4,14 @@ import 'package:provider/provider.dart';
 import 'cloudinary.dart';
 import 'images_picker.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _quantity = 0;
+
   @override
   Widget build(BuildContext context) {
     final _files = Provider.of<FetchImage>(context);
@@ -15,7 +22,7 @@ class MyHomePage extends StatelessWidget {
             : Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5, top: 12),
                 child: GridView.builder(
-                    itemCount: 8,
+                    itemCount: _quantity,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 1.0,
@@ -28,6 +35,9 @@ class MyHomePage extends StatelessWidget {
             onPressed: () async {
               await _files.init();
               await _response.upload(_files.list);
+              setState(() {
+                _quantity = _response.urlList.length;
+              });
             }));
   }
 }

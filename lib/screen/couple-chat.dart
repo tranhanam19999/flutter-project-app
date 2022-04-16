@@ -9,6 +9,8 @@ import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/const.dart';
+
 class CoupleChat extends StatefulWidget {
   const CoupleChat({Key? key}) : super(key: key);
 
@@ -47,7 +49,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
 
-    final url = Uri.parse("http://localhost:5000/chat" + "?userId=$userId");
+    final url = Uri.parse(API_CHAT + "?userId=$userId");
     var getChatConversationResp = await client.get(url);
 
     if (getChatConversationResp.statusCode == 200) {
@@ -66,8 +68,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
   void findPartner() async {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
-    final url =
-        Uri.parse("http://localhost:5000/user/partner" + "?userId=$userId");
+    final url = Uri.parse(API_PARTNER + "?userId=$userId");
 
     Map<String, String> headers = {"Content-type": "application/json"};
 
@@ -93,7 +94,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
   }
 
   void _sendMessage(BuildContext context) async {
-    String url = 'http://localhost:5000/chat';
+    String url = API_CHAT;
     Map<String, String> headers = {"Content-type": "application/json"};
     var obj = {
       'senderId': UserInfo.getInstance()?.userId,

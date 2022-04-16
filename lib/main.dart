@@ -7,6 +7,8 @@ import 'package:flutter_application_1/screen/couple-memory.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
 
+import 'utils/const.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -64,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var client = new http.Client();
 
       try {
-        String url = 'http://localhost:5000/auth/sign-in';
+        String url = API_SING_IN;
         Map<String, String> headers = {"Content-type": "application/json"};
         var obj = {'username': _username, 'password': _password};
 

@@ -6,6 +6,8 @@ import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
 
+import '../utils/const.dart';
+
 class CoupleMemory extends StatefulWidget {
   const CoupleMemory({Key? key}) : super(key: key);
 
@@ -26,8 +28,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   void findPartner() async {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
-    final url =
-        Uri.parse("http://localhost:5000/user/partner" + "?userId=$userId");
+    final url = Uri.parse(API_PARTNER + "?userId=$userId");
 
     Map<String, String> headers = {"Content-type": "application/json"};
 
