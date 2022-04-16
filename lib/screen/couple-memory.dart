@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
@@ -14,6 +15,7 @@ class CoupleMemory extends StatefulWidget {
 
 class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   var client = new http.Client();
+  var partnerId = PartnerInfo.getInstance()?.userId;
 
   @override
   void initState() {
@@ -47,6 +49,28 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
 
   @override
   Widget build(BuildContext context) {
+    if (PartnerInfo.getInstance()?.userId == "") {
+      return Scaffold(
+          body: Center(
+              child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          AlertDialog(
+            title: Text("Alert Dialog Box"),
+            content: Text("You have raised a Alert Dialog Box"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("okay"),
+              ),
+            ],
+          ),
+        ],
+      )));
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -58,6 +82,14 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                     'Đã ở bên nhau được 100 ngày',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   )),
+              AlertDialog(
+                title: Text("Success"),
+                actions: [
+                  CupertinoDialogAction(onPressed: () {}, child: Text("Back")),
+                  CupertinoDialogAction(onPressed: () {}, child: Text("Next")),
+                ],
+                content: Text("Saved successfully"),
+              ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
