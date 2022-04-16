@@ -5,6 +5,8 @@ import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
 
+import '../../utils/const.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key, required this.title}) : super(key: key);
 
@@ -69,9 +71,13 @@ class _MyRegisterPageState extends State<RegisterPage> {
       var client = new http.Client();
 
       try {
-        String url = 'http://localhost:5000/auth/sign-up';
+        String url = API_SING_UP;
         Map<String, String> headers = {"Content-type": "application/json"};
-        var obj = {'fullname': _fullname, 'username': _username, 'password': _password};
+        var obj = {
+          'fullname': _fullname,
+          'username': _username,
+          'password': _password
+        };
 
         // tạo POST request
         var signUpResp =
@@ -85,10 +91,14 @@ class _MyRegisterPageState extends State<RegisterPage> {
         } else {
           var loggedUser = jsonDecode(body);
 
-          print("ssss "+ loggedUser.toString());
+          print("ssss " + loggedUser.toString());
           var loggedUserId = loggedUser['data']['userId'];
           var loggedUserToken = loggedUser['data']['token'];
-          UserInfo.getInstance(username: _username, password: _password, userId: loggedUserId, token: loggedUserToken);
+          UserInfo.getInstance(
+              username: _username,
+              password: _password,
+              userId: loggedUserId,
+              token: loggedUserToken);
 
           scaffold.showSnackBar(
             SnackBar(
