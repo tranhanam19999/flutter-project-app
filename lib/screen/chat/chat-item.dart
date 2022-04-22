@@ -17,6 +17,9 @@ Widget ChatItem(BuildContext context, bool isCurrentUser, String content) {
                   : CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
+                  decoration: BoxDecoration(
+                      color: isCurrentUser ? Colors.blue : Colors.grey,
+                      borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
                     child: Column(
@@ -27,13 +30,16 @@ Widget ChatItem(BuildContext context, bool isCurrentUser, String content) {
                       children: <Widget>[
                         Text(
                           content,
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color:
+                                  isCurrentUser ? Colors.white : Colors.black),
                         ),
                       ],
                     ),
                   ),
-                  width: 80,
-                  color: isCurrentUser ? Colors.red : Colors.blue,
+                  // width: 300,
+                  constraints: BoxConstraints(maxWidth: 300),
                 )
               ],
             ),
