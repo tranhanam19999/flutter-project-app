@@ -5,6 +5,7 @@ import 'package:flutter_application_1/screen/auth/register.dart';
 import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/screen/couple-memory.dart';
 import 'package:flutter_application_1/store/user.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 
 import 'utils/const.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      builder: EasyLoading.init(),
     );
   }
 }
