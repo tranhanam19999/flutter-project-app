@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screen/couple-chat.dart';
+import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +19,7 @@ class CoupleMemory extends StatefulWidget {
 
 class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   var client = new http.Client();
+  PartnerInfo? partner = PartnerInfo.getInstance();
   String selectedUsername = "Chưa có";
   late Future<List<String>> usernames;
   var partnerId = PartnerInfo.getInstance()?.userId;
@@ -30,7 +33,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   }
 
   Future<List<String>> getAllUsers() async {
-    final url = Uri.parse(API_DOMAIN + "/user/list");
+    final url = Uri.parse(API_DOMAIN + "/user/user-without-partner");
     var getAllUsersResp = await client.get(url);
 
     if (getAllUsersResp.statusCode == 200) {
@@ -63,43 +66,63 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     var partnerUsername = data['username'];
     var partnerFullname = data['fullname'];
 
+    print("aaaaa " + partnerUserId);
+
     PartnerInfo.getInstance(
         username: partnerUsername,
         password: "",
         userId: partnerUserId,
         token: "");
+
+    setState(() {
+      partner!.userId = partnerUserId;
+    });
   }
 
-
   void validateSelectedPartner(context) async {
+    final scaffold = ScaffoldMessenger.of(context);
+
     var user = UserInfo.getInstance();
     var userId = user?.userId;
 
-    final url = Uri.parse(API_DOMAIN + "/user/verify-partner" + "?userId=$userId&?partnerUsername=$selectedUsername");
+    final url = Uri.parse(API_DOMAIN +
+        "/user/verify-partner" +
+        "?userId=$userId&partnerUsername=$selectedUsername");
 
     Map<String, String> headers = {"Content-type": "application/json"};
 
-    var getPartnerResp = await client.get(url, headers: headers);
+    var getPartnerResp = await client.put(url, headers: headers);
     String body = getPartnerResp.body;
 
     var loggedUser = jsonDecode(body);
 
     if (getPartnerResp.statusCode == 200) {
-      Navigator.of(context).pop();
+      scaffold.showSnackBar(
+        SnackBar(
+          content: const Text("Kết nối thành công"),
+          action: SnackBarAction(
+              label: 'Ẩn', onPressed: scaffold.hideCurrentSnackBar),
+        ),
+      );
+
+    DefaultTabController.of(context)?.animateTo(2);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (PartnerInfo.getInstance()?.userId == "" ||
-        PartnerInfo.getInstance()?.userId == null) {
+    print("bbbbb");
+    print(partner?.userId);
+
+    if (partner?.userId == "" ||
+        partner?.userId == null) {
       return Scaffold(
           body: Center(
               child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           AlertDialog(
-            title: Text("Alert Dialog Box"),
+            title: Text("Chọn bạn"),
             content: FutureBuilder<List<String>>(
               future: usernames,
               builder: (context, snapshot) {
@@ -137,7 +160,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                     validateSelectedPartner(context);
                   }
                 },
-                child: Text("okay"),
+                child: Text("Xác nhận"),
               ),
             ],
           ),
@@ -156,14 +179,6 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                     'Đã ở bên nhau được 100 ngày',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   )),
-              // AlertDialog(
-              //   title: Text("Success"),
-              //   actions: [
-              //     CupertinoDialogAction(onPressed: () {}, child: Text("Back")),
-              //     CupertinoDialogAction(onPressed: () {}, child: Text("Next")),
-              //   ],
-              //   content: Text("Saved successfully"),
-              // ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

@@ -87,11 +87,9 @@ class _MyRegisterPageState extends State<RegisterPage> {
         String body = signUpResp.body;
 
         if (signUpResp.statusCode == 400) {
-          print(signUpResp.body.toString());
         } else {
           var loggedUser = jsonDecode(body);
 
-          print("ssss " + loggedUser.toString());
           var loggedUserId = loggedUser['data']['userId'];
           var loggedUserToken = loggedUser['data']['token'];
           UserInfo.getInstance(
