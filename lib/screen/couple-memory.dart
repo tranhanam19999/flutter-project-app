@@ -105,7 +105,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
         ),
       );
 
-    DefaultTabController.of(context)?.animateTo(2);
+      DefaultTabController.of(context)?.animateTo(2);
     }
   }
 
@@ -114,8 +114,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     print("bbbbb");
     print(partner?.userId);
 
-    if (partner?.userId == "" ||
-        partner?.userId == null) {
+    if (partner?.userId == "" || partner?.userId == null) {
       return Scaffold(
           body: Center(
               child: Column(

@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/store/user.dart';
+import '../store/partner.dart';
 import '../utils/const.dart';
 import 'cloudinary.dart';
 import 'images_picker.dart';
@@ -22,7 +23,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    createMemory();
     getMemory();
+  }
+
+  void createMemory() async {
+    var user = UserInfo.getInstance();
+    var userId = user?.userId;
+    var partner = PartnerInfo.getInstance();
+    var partnerId = partner?.userId;
+
+    final url = Uri.parse(API_MEMORY + "/create-memory");
+    Map<String, String> headers = {"Content-type": "application/json"};
+    var createMemory = await client.post(url,
+        headers: headers,
+        body: json.encode(
+            {"user_id": userId, "partner_id": partnerId, "images": []}));
   }
 
   void getMemory() async {
