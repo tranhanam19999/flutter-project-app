@@ -129,7 +129,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
 
                       return SizedBox(
                           height: 200.0,
-                          child: ListViewChat(context, snapshot.data, userId));
+                          child: ListViewChat(context, snapshot.data!.reversed.toList(), userId));
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     }

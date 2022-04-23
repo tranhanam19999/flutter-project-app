@@ -4,45 +4,14 @@ import 'package:flutter_application_1/screen/model/chat-conversation.dart';
 
 Widget ListViewChat(BuildContext context,
     List<ChatConversation>? chatConversations, String? userId) {
-  Widget sender = Container(
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-      child: Column(
-        // align the text to the left instead of centered
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Nam',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text('1111'),
-        ],
-      ),
-    ),
-    width: 80,
-    color: Colors.red,
-  );
+  final ScrollController _scrollController = ScrollController();
 
-  Widget receiver = Container(
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
-      child: Column(
-        // align the text to the left instead of centered
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Lam',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text('222'),
-        ],
-      ),
-    ),
-    width: 80,
-    color: Colors.blue,
-  );
+  if (_scrollController.hasClients) {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
 
-  return ListView.builder(
+  return ListView.builder( reverse: true,
+    controller: _scrollController,
     shrinkWrap: true,
     itemCount: chatConversations?.length,
     itemBuilder: (context, index) {
