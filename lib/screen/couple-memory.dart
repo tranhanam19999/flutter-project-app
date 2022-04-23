@@ -193,8 +193,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                               ),
                             ),
                             child: Image.asset(
-                              'images/bear.png',
-                              width: 600.0,
+                              'assets/images/couple.png',
+                              width: 700.0,
                               height: 240.0,
                               fit: BoxFit.cover,
                             ),
@@ -213,8 +213,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                             ),
                           ),
                           child: Image.asset(
-                            'images/bear.png',
-                            width: 600.0,
+                            'assets/images/couple.png',
+                            width: 700.0,
                             height: 240.0,
                             fit: BoxFit.cover,
                           ),
