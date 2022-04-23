@@ -8,6 +8,7 @@ import 'package:flutter_application_1/screen/model/conversation.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_emoji_keyboard/flutter_emoji_keyboard.dart';
 
 import '../utils/const.dart';
 
@@ -21,6 +22,7 @@ class CoupleChat extends StatefulWidget {
 class _MyCoupleChatScreenState extends State<CoupleChat> {
   late Future<List<ChatConversation>> futureChatConversation;
   TextEditingController _controller = new TextEditingController(text: "");
+  bool isShowEmojiKeyboard = false;
 
   String _textContent = "";
   var client = new http.Client();
@@ -42,6 +44,21 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
       setState(() {
         futureChatConversation = fetchResult;
       });
+    });
+  }
+
+  void _onEmojiSelected(Emoji emoji) {
+    _controller
+      ..text += emoji.text
+      ..selection = TextSelection.fromPosition(
+          TextPosition(offset: _controller.text.length));
+  }
+
+  void openEmojiKeyboard(context) {
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      isShowEmojiKeyboard = !isShowEmojiKeyboard;
     });
   }
 
@@ -99,7 +116,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     var obj = {
       'senderId': UserInfo.getInstance()?.userId,
       'receiverId': PartnerInfo.getInstance()?.userId,
-      'content': _textContent
+      'content': _controller.text
     };
 
     await client.post(url, headers: headers, body: jsonEncode(obj));
@@ -129,7 +146,8 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
 
                       return SizedBox(
                           height: 200.0,
-                          child: ListViewChat(context, snapshot.data!.reversed.toList(), userId));
+                          child: ListViewChat(context,
+                              snapshot.data!.reversed.toList(), userId));
                     } else if (snapshot.hasError) {
                       return Text('${snapshot.error}');
                     }
@@ -142,10 +160,21 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
+                  onTap: () => {
+                    if (isShowEmojiKeyboard)
+                      {
+                        setState(() {
+                          isShowEmojiKeyboard = !isShowEmojiKeyboard;
+                        })
+                      }
+                  },
                   controller: _controller,
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
                     hintText: 'Nhập nội dung',
+                    prefixIcon: IconButton(
+                        onPressed: () => openEmojiKeyboard(context),
+                        icon: const Icon(Icons.add_reaction)),
                     suffixIcon: IconButton(
                         onPressed: () => _sendMessage(context),
                         icon: const Icon(Icons.message)),
@@ -153,6 +182,11 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
                   onChanged: (text) => _handleOnChangeTextContent(text),
                 ),
               ),
+              Offstage(
+                  offstage: !isShowEmojiKeyboard,
+                  child: EmojiKeyboard(
+                    onEmojiSelected: _onEmojiSelected,
+                  ))
             ]),
       ),
     );
