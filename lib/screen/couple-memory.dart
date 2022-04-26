@@ -123,8 +123,6 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     var partnerUsername = data['username'];
     var partnerFullname = data['fullname'];
 
-    print("aaaaa " + partnerUserId);
-
     PartnerInfo.getInstance(
         username: partnerUsername,
         password: "",
