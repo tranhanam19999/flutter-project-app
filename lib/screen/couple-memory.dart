@@ -1,14 +1,63 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_application_1/screen/couple-chat.dart';
 import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 import '../utils/const.dart';
+
+final List<Map> articles = [
+  {
+    "title": "How to Seem Like You Always Have Your Shot Together",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "Does Dry is January Actually Improve Your Health?",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "You do hire a designer to make something. You hire them.",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "How to Seem Like You Always Have Your Shot Together",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "How to Seem Like You Always Have Your Shot Together",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "Does Dry is January Actually Improve Your Health?",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "You do hire a designer to make something. You hire them.",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+  {
+    "title": "How to Seem Like You Always Have Your Shot Together",
+    "author": "Jonhy Vino",
+    "time": "4 min read",
+  },
+];
 
 class CoupleMemory extends StatefulWidget {
   const CoupleMemory({Key? key}) : super(key: key);
@@ -18,6 +67,14 @@ class CoupleMemory extends StatefulWidget {
 }
 
 class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
+  static final String path = "lib/screen/couple-memory.dart";
+  final Color primaryColor = Color(0xffFD6592);
+  final Color bgColor = Color(0xffF9E0E3);
+  final Color secondaryColor = Color(0xff324558);
+  final Color color1 = Color(0xffFC5CF0);
+  final Color color2 = Color(0xffFE8852);
+  final String image =
+      "https://www.vivosmartphone.vn/uploads/MANGOADS/c%E1%BA%B7p%20%C4%91%C3%B4i/cho%20couple/1.jpg";
   var client = new http.Client();
   PartnerInfo? partner = PartnerInfo.getInstance();
   String selectedUsername = "Chưa có";
@@ -109,11 +166,31 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     }
   }
 
+  Future<List<Asset>> selectImagesFromGallery() async {
+    return await MultiImagePicker.pickImages(
+      maxImages: 1,
+      enableCamera: true,
+      materialOptions: const MaterialOptions(
+        actionBarColor: "#FF147cfa",
+        statusBarColor: "#FF147cfa",
+      ),
+    );
+  }
+
+  List<File> files = [];
+  Future<void> _openGallary() async {
+    files.clear();
+    List<Asset> assets = await selectImagesFromGallery();
+    for (Asset asset in assets) {
+      final filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      files.add(File(filePath));
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("bbbbb");
-    print(partner?.userId);
-
     if (partner?.userId == "" || partner?.userId == null) {
       return Scaffold(
           body: Center(
@@ -166,74 +243,308 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
         ],
       )));
     }
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                  padding: EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 20.0),
+    return DefaultTabController(
+      initialIndex: 0,
+      length: 2,
+      child: Theme(
+        data: ThemeData(
+          primaryColor: primaryColor,
+          appBarTheme: AppBarTheme(
+            color: Colors.white,
+            textTheme: TextTheme(
+              headline6: TextStyle(
+                color: secondaryColor,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            iconTheme: IconThemeData(color: secondaryColor),
+            actionsIconTheme: IconThemeData(
+              color: secondaryColor,
+            ),
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Theme.of(context).buttonColor,
+          appBar: AppBar(
+            title: TabBar(
+              isScrollable: true,
+              labelColor: primaryColor,
+              indicatorColor: primaryColor,
+              unselectedLabelColor: secondaryColor,
+              tabs: const <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Đã ở bên nhau được 100 ngày',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  )),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                              ),
-                            ),
-                            child: Image.asset(
-                              'assets/images/couple.png',
-                              width: 700.0,
-                              height: 240.0,
-                              fit: BoxFit.cover,
-                            ),
-                          )),
-                    ),
+                    "Been together",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                            ),
-                          ),
-                          child: Image.asset(
-                            'assets/images/couple.png',
-                            width: 700.0,
-                            height: 240.0,
-                            fit: BoxFit.cover,
-                          ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Event in love",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+              ],
+            ),
+            centerTitle: true,
+          ),
+          body: TabBarView(
+            children: <Widget>[
+              _Tab2(),
+              ListView.separated(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: articles.length,
+                itemBuilder: (context, index) {
+                  return _buildArticleItem(index);
+                },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16.0),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArticleItem(int index) {
+    Map article = articles[index];
+    const String sample =
+        "https://recmiennam.com/wp-content/uploads/2018/04/hinh-anh-thac-nuoc-dep-32.jpg";
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: 90,
+            height: 90,
+            color: bgColor,
+          ),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16.0),
+            margin: const EdgeInsets.all(16.0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 100,
+                  color: Colors.blue,
+                  width: 80.0,
+                  child: const PNetworkImage(
+                    sample,
+                    height: 100,
+                    width: 80.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 20.0),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        article["title"],
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          color: secondaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
                         ),
                       ),
-                    ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            WidgetSpan(
+                              child: CircleAvatar(
+                                radius: 15.0,
+                                backgroundColor: primaryColor,
+                              ),
+                            ),
+                            const WidgetSpan(
+                              child: SizedBox(width: 5.0),
+                            ),
+                            TextSpan(
+                                text: article["author"],
+                                style: TextStyle(fontSize: 16.0)),
+                            const WidgetSpan(
+                              child: SizedBox(width: 20.0),
+                            ),
+                            const WidgetSpan(
+                              child: SizedBox(width: 5.0),
+                            ),
+                            TextSpan(
+                              text: article["time"],
+                            ),
+                          ],
+                        ),
+                        style: const TextStyle(height: 2.0),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                const Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 20.0),
-                    child: Text(
-                      'Cảm ơn gì gì đó, chúc kỷ niệm,...',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    )),
-              ])
-            ]),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _Tab2() {
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: 400,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50.0),
+                    bottomRight: Radius.circular(50.0)),
+                gradient: LinearGradient(
+                    colors: [color1, color2],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight)),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 50),
+            child: Column(
+              children: <Widget>[
+                const Text(
+                  "Been together",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 20.0),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                          height: double.infinity,
+                          margin: const EdgeInsets.only(
+                              left: 30.0, right: 30.0, top: 10.0),
+                          child: GestureDetector(
+                            onTap: _openGallary,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(30.0),
+                              child: files.isEmpty
+                                  ? PNetworkImage(
+                                      image,
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      files[0],
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          )),
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 5.0),
+                          decoration: BoxDecoration(
+                              color: Colors.yellow,
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: const Text(
+                            "432 days",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                const Text(
+                  "Minh Tiền - Mai Thương",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22.0,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.black54),
+                ),
+                SizedBox(height: 30.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "\"Life is great when we have each other\"",
+                      style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 17.0,
+                          fontStyle: FontStyle.italic),
+                    )
+                  ],
+                ),
+                SizedBox(height: 20.0),
+                Container(
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 16.0),
+                        margin: const EdgeInsets.only(
+                            top: 30, left: 20.0, right: 20.0, bottom: 20.0),
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [color1, color2],
+                            ),
+                            borderRadius: BorderRadius.circular(30.0)),
+                        child: Row(
+                          children: <Widget>[
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(FontAwesomeIcons.user),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.location_on),
+                              onPressed: () {},
+                            ),
+                            Spacer(),
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.add),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              color: Colors.white,
+                              icon: Icon(Icons.message),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: FloatingActionButton(
+                          child: Icon(
+                            Icons.favorite,
+                            color: Colors.pink,
+                            size: 30,
+                          ),
+                          backgroundColor: Colors.white,
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

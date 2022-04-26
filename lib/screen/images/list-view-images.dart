@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget ListViewImages(BuildContext context) {
+  AssetImage pizzaAsset = AssetImage('images/couple.png');
   Widget column = Expanded(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -12,8 +13,8 @@ Widget ListViewImages(BuildContext context) {
               width: 2,
             ),
           ),
-          child: Image.asset(
-            'images/bear.png',
+          child: Image(
+            image: pizzaAsset,
             width: 600.0,
             height: 240.0,
             fit: BoxFit.cover,

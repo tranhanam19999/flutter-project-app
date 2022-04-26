@@ -40,10 +40,11 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     const fiveSec = const Duration(seconds: 2);
     Timer.periodic(fiveSec, (Timer t) async {
       var fetchResult = fetchChatConversation();
-
-      setState(() {
-        futureChatConversation = fetchResult;
-      });
+      if (mounted) {
+        setState(() {
+          futureChatConversation = fetchResult;
+        });
+      }
     });
   }
 
@@ -57,9 +58,11 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
   void openEmojiKeyboard(context) {
     FocusScope.of(context).unfocus();
 
-    setState(() {
-      isShowEmojiKeyboard = !isShowEmojiKeyboard;
-    });
+    if (mounted) {
+      setState(() {
+        isShowEmojiKeyboard = !isShowEmojiKeyboard;
+      });
+    }
   }
 
   Future<List<ChatConversation>> fetchChatConversation() async {
@@ -122,10 +125,12 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
     await client.post(url, headers: headers, body: jsonEncode(obj));
 
     var fetchResult = fetchChatConversation();
-    setState(() {
-      _textContent = "";
-      futureChatConversation = fetchResult;
-    });
+    if (mounted) {
+      setState(() {
+        _textContent = "";
+        futureChatConversation = fetchResult;
+      });
+    }
     _controller.clear();
   }
 
@@ -161,7 +166,7 @@ class _MyCoupleChatScreenState extends State<CoupleChat> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   onTap: () => {
-                    if (isShowEmojiKeyboard)
+                    if (isShowEmojiKeyboard && mounted)
                       {
                         setState(() {
                           isShowEmojiKeyboard = !isShowEmojiKeyboard;
