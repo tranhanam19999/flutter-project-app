@@ -41,6 +41,13 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   var partnerId = PartnerInfo.getInstance()?.userId;
   var daysInLove = 0;
 
+  final List<Color> _listColor = [
+    Colors.green,
+    Colors.blueAccent,
+    Color.fromARGB(255, 220, 64, 64),
+    Color.fromARGB(255, 87, 13, 26),
+  ];
+
   @override
   void dispose() {
     super.dispose();
@@ -141,7 +148,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     }
   }
 
-  late List _events;
+  List _events = [];
   getAllEvent() async {
     var user = UserInfo.getInstance();
     var userId = user?.userId;
@@ -153,11 +160,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     EasyLoading.dismiss();
     var data = jsonDecode(getMemory.body);
     // var images = data['images'];
-    if (mounted) {
-      setState(() {
-        _events = data['events'];
-      });
-    }
+    _events = data['events'];
+    setState(() {});
   }
 
   Future<List<Asset>> selectImagesFromGallery() async {
@@ -275,9 +279,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
               unselectedLabelColor: secondaryColor,
               onTap: (index) {
                 if (index == 1) {
-                  setState(() async {
-                    await getAllEvent();
-                  });
+                  getAllEvent();
+                  setState(() {});
                 }
               },
               tabs: const <Widget>[
@@ -354,7 +357,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                             WidgetSpan(
                               child: CircleAvatar(
                                 radius: 15.0,
-                                backgroundColor: primaryColor,
+                                backgroundColor:
+                                    _listColor[int.parse(event['motion'])],
                               ),
                             ),
                             const WidgetSpan(
