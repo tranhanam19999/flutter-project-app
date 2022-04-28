@@ -15,6 +15,8 @@ class CoupleMotto extends StatefulWidget {
 }
 
 class _MyCoupleMottoScreenState extends State<CoupleMotto> {
+  TextEditingController _controller = new TextEditingController(text: "");
+
   late Future<List<MottoItem>> futureMotto;
   var client = new http.Client();
 
@@ -44,31 +46,88 @@ class _MyCoupleMottoScreenState extends State<CoupleMotto> {
     }
   }
 
+  void createMotto(context) async {
+    // TODO: Create motto then close dialog
+    Map<String, String> headers = {"Content-type": "application/json"};
+    var obj = {
+      'content': _controller.text,
+      'creatorId': UserInfo.getInstance()?.userId
+    };
+
+    // tạo POST request
+    var signUpResp = await client.post(API_DOMAIN + "/motto",
+        headers: headers, body: jsonEncode(obj));
+
+    int statusCode = signUpResp.statusCode;
+    String body = signUpResp.body;
+
+    if (signUpResp.statusCode == 200) {
+      futureMotto = fetchMottos();
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // Add your onPressed code here!
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Tạo châm ngôn"),
+                      content: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Nhập châm ngôn',
+                            ),
+                            controller: _controller,
+                          )),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            createMotto(context);
+                          },
+                          child: Text("Tạo"),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Hủy"),
+                        ),
+                      ],
+                    );
+                  });
+              // body: Container());
+            },
+            backgroundColor: Colors.blue,
+            child: const Icon(Icons.add_circle_outlined)),
         body: Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-          Expanded(
-            child: FutureBuilder<List<MottoItem>>(
-              future: futureMotto,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SizedBox(
-                      height: 200.0,
-                      child:
-                          ListMotto(context, snapshot.data));
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
+              Expanded(
+                child: FutureBuilder<List<MottoItem>>(
+                  future: futureMotto,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return SizedBox(
+                          height: 200.0,
+                          child: ListMotto(context, snapshot.data));
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
 
-                // By default, show a loading spinner.
-                return const CircularProgressIndicator();
-              },
-            ),
-          )
-        ])));
+                    // By default, show a loading spinner.
+                    return const CircularProgressIndicator();
+                  },
+                ),
+              )
+            ])));
   }
 }

@@ -39,6 +39,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   String selectedUsername = "Chưa có";
   late Future<List<String>> usernames;
   var partnerId = PartnerInfo.getInstance()?.userId;
+  var daysInLove = 0;
 
   @override
   void dispose() {
@@ -84,11 +85,13 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
 
     var data = loggedUser['data'];
 
+    var matchTime = data['matchTime'];
+    DateTime date1 = DateTime.parse(matchTime);
+    DateTime date2 = DateTime.now();
+
     var partnerUserId = data['userId'];
     var partnerUsername = data['username'];
     var partnerFullname = data['fullname'];
-
-    print("aaaaa " + partnerUserId);
 
     PartnerInfo.getInstance(
         username: partnerUsername,
@@ -97,8 +100,15 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
         token: "");
 
     setState(() {
+      daysInLove = daysBetween(date1, date2);
       partner!.userId = partnerUserId;
     });
+  }
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
   }
 
   void validateSelectedPartner(context) async {
@@ -454,8 +464,8 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                           decoration: BoxDecoration(
                               color: Colors.yellow,
                               borderRadius: BorderRadius.circular(20.0)),
-                          child: const Text(
-                            "432 days",
+                          child: Text(
+                            daysInLove.toString() + " days",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
