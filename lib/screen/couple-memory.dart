@@ -8,56 +8,15 @@ import 'package:flutter_application_1/screen/couple-chat.dart';
 import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/store/partner.dart';
 import 'package:flutter_application_1/store/user.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/network_image.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-
+import 'package:flutter_application_1/screen/create-event.dart';
+import 'package:flutter_application_1/screen/create-event.dart';
 import '../utils/const.dart';
-
-final List<Map> articles = [
-  {
-    "title": "How to Seem Like You Always Have Your Shot Together",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "Does Dry is January Actually Improve Your Health?",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "You do hire a designer to make something. You hire them.",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "How to Seem Like You Always Have Your Shot Together",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "How to Seem Like You Always Have Your Shot Together",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "Does Dry is January Actually Improve Your Health?",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "You do hire a designer to make something. You hire them.",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-  {
-    "title": "How to Seem Like You Always Have Your Shot Together",
-    "author": "Jonhy Vino",
-    "time": "4 min read",
-  },
-];
 
 class CoupleMemory extends StatefulWidget {
   const CoupleMemory({Key? key}) : super(key: key);
@@ -82,11 +41,17 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   var partnerId = PartnerInfo.getInstance()?.userId;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
 
     usernames = getAllUsers();
     findPartner();
+    getAllEvent();
   }
 
   Future<List<String>> getAllUsers() async {
@@ -166,6 +131,25 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
     }
   }
 
+  late List _events;
+  getAllEvent() async {
+    var user = UserInfo.getInstance();
+    var userId = user?.userId;
+    final url = Uri.parse(API_EVENT + "/$userId");
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    EasyLoading.showProgress(0, status: 'Waitting...');
+    var getMemory = await client.get(url, headers: headers);
+    EasyLoading.dismiss();
+    var data = jsonDecode(getMemory.body);
+    // var images = data['images'];
+    if (mounted) {
+      setState(() {
+        _events = data['events'];
+      });
+    }
+  }
+
   Future<List<Asset>> selectImagesFromGallery() async {
     return await MultiImagePicker.pickImages(
       maxImages: 1,
@@ -187,6 +171,13 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
       files.add(File(filePath));
     }
     setState(() {});
+  }
+
+  _createEvent() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateEvent()),
+    );
   }
 
   @override
@@ -272,6 +263,13 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
               labelColor: primaryColor,
               indicatorColor: primaryColor,
               unselectedLabelColor: secondaryColor,
+              onTap: (index) {
+                if (index == 1) {
+                  setState(() async {
+                    await getAllEvent();
+                  });
+                }
+              },
               tabs: const <Widget>[
                 Padding(
                   padding: EdgeInsets.all(8.0),
@@ -292,18 +290,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
             centerTitle: true,
           ),
           body: TabBarView(
-            children: <Widget>[
-              _Tab2(),
-              ListView.separated(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: articles.length,
-                itemBuilder: (context, index) {
-                  return _buildArticleItem(index);
-                },
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 16.0),
-              ),
-            ],
+            children: <Widget>[_Tab2(), _Tab1()],
           ),
         ),
       ),
@@ -311,9 +298,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   }
 
   Widget _buildArticleItem(int index) {
-    Map article = articles[index];
-    const String sample =
-        "https://recmiennam.com/wp-content/uploads/2018/04/hinh-anh-thac-nuoc-dep-32.jpg";
+    Map event = _events[index];
     return Container(
       color: Colors.white,
       child: Stack(
@@ -333,10 +318,10 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                   height: 100,
                   color: Colors.blue,
                   width: 80.0,
-                  child: const PNetworkImage(
-                    sample,
-                    height: 100,
-                    width: 80.0,
+                  child: PNetworkImage(
+                    event['image'],
+                    height: 120,
+                    width: 100.0,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -345,7 +330,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        article["title"],
+                        event['name'],
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           color: secondaryColor,
@@ -366,7 +351,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                               child: SizedBox(width: 5.0),
                             ),
                             TextSpan(
-                                text: article["author"],
+                                text: event['user_created'],
                                 style: TextStyle(fontSize: 16.0)),
                             const WidgetSpan(
                               child: SizedBox(width: 20.0),
@@ -375,7 +360,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
                               child: SizedBox(width: 5.0),
                             ),
                             TextSpan(
-                              text: article["time"],
+                              text: event["date"],
                             ),
                           ],
                         ),
@@ -389,6 +374,21 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _Tab1() {
+    return Scaffold(
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: _events.length,
+        itemBuilder: (context, index) {
+          return _buildArticleItem(index);
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 16.0),
+      ),
+      floatingActionButton: FloatingActionButton.small(
+          child: const Icon(Icons.add), onPressed: _createEvent),
     );
   }
 

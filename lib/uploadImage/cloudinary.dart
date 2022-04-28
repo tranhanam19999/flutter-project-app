@@ -15,8 +15,8 @@ class CloudImage with ChangeNotifier {
       "TlbFs2cpNa6QdnLN2kJH-kVMUlc",
       "fresh-shop",
     );
-    List<CloudinaryResponse> response =
-        await client.uploadImages(imagesList, filename: "MawCars");
+    List<CloudinaryResponse> response = await client.uploadImages(imagesList,
+        filename: "image_", folder: "Flutter");
     _response = response;
     notifyListeners();
     if (_response == null) {
