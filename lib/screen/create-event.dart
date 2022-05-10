@@ -6,6 +6,7 @@ import 'package:cloudinary_client/models/CloudinaryResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter_application_1/screen/couple-memory.dart';
+import 'package:flutter_application_1/screen/layout.dart';
 import 'package:flutter_application_1/uploadImage/cloudinary.dart';
 import 'package:flutter_application_1/utils/const.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -274,7 +275,7 @@ class _CreateEvent extends State<CreateEvent> {
     EasyLoading.dismiss();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CoupleMemory()),
+      MaterialPageRoute(builder: (context) => const Layout()),
     );
   }
 

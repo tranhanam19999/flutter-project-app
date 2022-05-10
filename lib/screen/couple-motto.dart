@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -24,6 +25,20 @@ class _MyCoupleMottoScreenState extends State<CoupleMotto> {
   void initState() {
     super.initState();
     futureMotto = fetchMottos();
+
+    updateChatConversation();
+  }
+
+ void updateChatConversation() {
+    const fiveSec = const Duration(seconds: 2);
+    Timer.periodic(fiveSec, (Timer t) async {
+      var fetchResult = fetchMottos();
+      if (mounted) {
+        setState(() {
+          futureMotto = fetchResult;
+        });
+      }
+    });
   }
 
   Future<List<MottoItem>> fetchMottos() async {
