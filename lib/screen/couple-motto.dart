@@ -29,7 +29,7 @@ class _MyCoupleMottoScreenState extends State<CoupleMotto> {
     updateChatConversation();
   }
 
- void updateChatConversation() {
+  void updateChatConversation() {
     const fiveSec = const Duration(seconds: 2);
     Timer.periodic(fiveSec, (Timer t) async {
       var fetchResult = fetchMottos();
@@ -92,35 +92,55 @@ class _MyCoupleMottoScreenState extends State<CoupleMotto> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text("Tạo châm ngôn"),
+                      title: Text(
+                        "Tạo châm ngôn",
+                        style: TextStyle(color: Colors.red),
+                      ),
                       content: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
                           child: TextField(
                             decoration: const InputDecoration(
+                              focusColor: Colors.red,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2.0),
+                              ),
                               border: OutlineInputBorder(),
                               hintText: 'Nhập châm ngôn',
                             ),
                             controller: _controller,
                           )),
                       actions: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            createMotto(context);
-                          },
-                          child: Text("Tạo"),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                              color: Color(0xffff3a5a)),
+                          child: FlatButton(
+                              child: Text(
+                                "Tạo",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18),
+                              ),
+                              onPressed: () => createMotto(context)),
                         ),
                         FlatButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("Hủy"),
+                          child: Text(
+                            "Hủy",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     );
                   });
-              // body: Container());
             },
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.red,
             child: const Icon(Icons.add_circle_outlined)),
         body: Center(
             child: Column(

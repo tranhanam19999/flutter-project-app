@@ -18,7 +18,7 @@ Widget ChatItem(BuildContext context, bool isCurrentUser, String content) {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                      color: isCurrentUser ? Colors.blue : Colors.grey,
+                      color: isCurrentUser ? Colors.red : Colors.grey,
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),

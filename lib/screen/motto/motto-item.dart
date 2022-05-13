@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 Widget MottoSingle(BuildContext context, String content) {
   final screenWidth = MediaQuery.of(context).size.width - 48;
+  final Color color1 = Color(0xffFC5CF0);
+  final Color color2 = Color(0xffFE8852);
 
   return (Card(
       child: Padding(
@@ -15,7 +17,9 @@ Widget MottoSingle(BuildContext context, String content) {
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey,
+                      gradient: LinearGradient(
+                        colors: [color1, color2],
+                      ),
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 16.0),
@@ -25,13 +29,11 @@ Widget MottoSingle(BuildContext context, String content) {
                       children: <Widget>[
                         Text(
                           content,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ],
                     ),
-                  ),
+                 ),
                   // width: 300,
                   constraints: BoxConstraints(maxWidth: 300),
                 )

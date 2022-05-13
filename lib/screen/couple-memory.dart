@@ -272,6 +272,7 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
         child: Scaffold(
           backgroundColor: Theme.of(context).buttonColor,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: TabBar(
               isScrollable: true,
               labelColor: primaryColor,

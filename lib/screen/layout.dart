@@ -44,6 +44,7 @@ class _LayoutState extends State<Layout> {
           _selectTab(index);
         },
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.red,
         // ignore: prefer_const_literals_to_create_immutables
         items: [
           const BottomNavigationBarItem(

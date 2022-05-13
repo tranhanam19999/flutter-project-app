@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     })),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
             child: Icon(Icons.image),
             onPressed: () async {
               EasyLoading.showProgress(0, status: 'Waitting...');

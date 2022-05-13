@@ -135,7 +135,7 @@ class _CreateEvent extends State<CreateEvent> {
     // Note: you can do your own custom validation here
     // Move this logic this outside the widget for more testable code
     if (text.isEmpty) {
-      return 'Can\'t be empty';
+      return "Yêu cầu nhập vào";
     }
     // return null if the text is valid
     return null;
@@ -199,7 +199,7 @@ class _CreateEvent extends State<CreateEvent> {
                   TextField(
                     controller: _controller,
                     decoration: InputDecoration(
-                      labelText: "Event name",
+                      labelText: "Tên sự kiện",
                       errorText: _errorText,
                     ),
                     style: const TextStyle(
@@ -216,21 +216,21 @@ class _CreateEvent extends State<CreateEvent> {
                     firstDate: DateTime(DateTime.now().year - 5),
                     lastDate: DateTime(DateTime.now().year + 5),
                     initialDate: DateTime.now(),
-                    fieldLabelText: "Date of event",
+                    fieldLabelText: "Ngày tháng năm của sự kiện",
                     onDateSubmitted: (text) => _handleOnChangeDate(text),
                   ),
                   const SizedBox(height: 10.0),
                   TextField(
                     maxLines: 2,
                     decoration: InputDecoration(
-                      labelText: "Description",
+                      labelText: "Mô tả",
                       errorText: _errorText,
                     ),
                     onChanged: (text) => _handleOnChangeDescription(text),
                   ),
                   const SizedBox(height: 10.0),
                   Text(
-                    "Emotion",
+                    "Cảm xúc",
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   const SizedBox(height: 15.0),
@@ -240,7 +240,7 @@ class _CreateEvent extends State<CreateEvent> {
                       children: techChips()),
                   const SizedBox(height: 30.0),
                   MaterialButton(
-                    child: Text("Create"),
+                    child: Text("Tạo"),
                     color: Colors.pink,
                     onPressed:
                         _controller.value.text.isNotEmpty ? _submit : null,
@@ -260,7 +260,7 @@ class _CreateEvent extends State<CreateEvent> {
   }
 
   void _submit() async {
-    EasyLoading.showProgress(0, status: 'Waitting...');
+    EasyLoading.showProgress(0, status: 'Đang tải...');
     // if there is no error text
     if (_errorText == null) {
       // notify the parent widget via the onSubmit callback

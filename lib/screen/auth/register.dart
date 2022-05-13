@@ -138,6 +138,7 @@ class _MyRegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Color(0xffff3a5a),
       ),
       body: Center(
         child: Column(
@@ -147,52 +148,124 @@ class _MyRegisterPageState extends State<RegisterPage> {
               'Đăng Ký',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Nhập tên của bạn',
-                ),
-                onChanged: (text) => _handleOnChangeFullname(text),
-              ),
+            SizedBox(
+              height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Nhập tên đăng nhập',
-                ),
-                onChanged: (text) => _handleOnChangeUsername(text),
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
                 child: TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Nhập mật khẩu',
-                  ),
+                  onChanged: (text) => _handleOnChangeFullname(text),
+                  cursorColor: Colors.deepOrange,
+                  decoration: InputDecoration(
+                      hintText: 'Nhập tên của bạn',
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.red,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextField(
+                  onChanged: (text) => _handleOnChangeUsername(text),
+                  cursorColor: Colors.deepOrange,
+                  decoration: InputDecoration(
+                      hintText: 'Nhập tên đăng nhập',
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.supervised_user_circle,
+                          color: Colors.red,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                child: TextField(
+                  obscureText: true,
                   onChanged: (text) => _handleOnChangePassword(text),
-                  obscureText: true,
-                )),
+                  cursorColor: Colors.deepOrange,
+                  decoration: InputDecoration(
+                      hintText: 'Nhập mật khẩu',
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.lock,
+                          color: Colors.red,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
-                padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: 32),
+              child: Material(
+                elevation: 2.0,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
                 child: TextField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Nhập lại mật khẩu',
-                  ),
-                  onChanged: (text) => _handleOnChangeValidatedPassword(text),
                   obscureText: true,
-                )),
+                  onChanged: (text) => _handleOnChangeValidatedPassword(text),
+                  cursorColor: Colors.deepOrange,
+                  decoration: InputDecoration(
+                      hintText: 'Nhập lại mật khẩu',
+                      prefixIcon: Material(
+                        elevation: 0,
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        child: Icon(
+                          Icons.lock,
+                          color: Colors.red,
+                        ),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             TextButton(
                 onPressed: () => _handleLogin(context),
                 child: const Text("Đăng ký"),
                 style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.blue),
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.white),
                   padding: MaterialStateProperty.all<EdgeInsets>(
