@@ -63,7 +63,10 @@ class _MyCoupleMemoryScreenState extends State<CoupleMemory> {
   }
 
   Future<List<String>> getAllUsers() async {
-    final url = Uri.parse(API_DOMAIN + "/user/user-without-partner");
+    var user = UserInfo.getInstance();
+    var userId = user?.userId;
+
+    final url = Uri.parse(API_DOMAIN + "/user/user-without-partner?senderId=$userId");
     var getAllUsersResp = await client.get(url);
 
     if (getAllUsersResp.statusCode == 200) {
